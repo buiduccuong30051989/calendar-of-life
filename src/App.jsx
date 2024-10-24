@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { DatesCalendar } from "./components/datesCalendar";
+import { Sidebar } from "./components/sidebar";
 import { WeeksCalendar } from "./components/weeksCalendar";
 import { dateDifferencesFunc, remainingDifferencesFunc } from "./utils";
+
+const initSettings = {
+	yearEnd: false,
+	birthday: false,
+	strippedMonth: false,
+	strippedYear: false,
+};
 
 function App() {
 	const [dates, setDates] = useState({
 		dateOfBirth: "1989-05-30",
 		dateOfDie: "2062-05-30",
 	});
+	const [settings, setSettings] = useState(initSettings);
 	const [showDateCalendar, setShowDateCalendar] = useState(false);
 
 	const dateDifferences = dateDifferencesFunc(dates);
@@ -21,32 +30,38 @@ function App() {
 		}));
 	};
 
+	const handleChangeSetting = (e) => {
+		const { id, value } = e.target;
+		setSettings(() => ({
+			initSettings,
+			[id]: value,
+		}));
+	};
+
 	if (!dates.dateOfBirth || !dates.dateOfDie)
 		return <FormDate dates={dates} handleChange={handleChange} />;
 
+	// - tooltip
+	// - should allow custom style
+	// - research when print, remove or replace some css color
+
 	return (
 		<div className="h-screen w-full flex items-center max-w-[90vw] mx-auto">
-			<div className={`${showDateCalendar ? "" : "hidden"}`}>
-				{remainingDifferences && (
-					<div>
-						<p>Số ngày còn lại: {remainingDifferences.days}</p>
-						<p>Số tuần còn lại: {remainingDifferences.weeks}</p>
-						<p>Số tháng còn lại: {remainingDifferences.months}</p>
-						<p>Số năm còn lại: {remainingDifferences.years}</p>
-						<p>Số lần sinh nhật còn lại: {remainingDifferences.birthdays}</p>
-						<p>Số lần tết holiday còn lại: {remainingDifferences.holidays}</p>
-					</div>
-				)}
-			</div>
+			<Sidebar
+				handleChange={handleChangeSetting}
+				remainingDifferences={remainingDifferences}
+			/>
+
 			{dateDifferences && (
 				<>
 					{showDateCalendar && (
-						<DatesCalendar
-							dates={dates}
-							dateDifferences={dateDifferences}
-						/>
+						<DatesCalendar dates={dates} dateDifferences={dateDifferences} />
 					)}
-					<WeeksCalendar dates={dates} dateDifferences={dateDifferences} />
+					<WeeksCalendar
+						settings={settings}
+						dates={dates}
+						dateDifferences={dateDifferences}
+					/>
 				</>
 			)}
 		</div>
