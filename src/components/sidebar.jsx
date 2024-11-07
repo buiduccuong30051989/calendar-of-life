@@ -1,7 +1,14 @@
-export const Sidebar = ({ handleChange, remainingDifferences }) => {
+export const Sidebar = ({
+	handleChange,
+	remainingDifferences,
+	settings,
+	openSidebar,
+}) => {
 	return (
-		<div className="h-screen w-[300px] bg-gray-50 fixed top-0 left-0 px-4 py-8">
-			<h2 className="block text-center text-2xl font-bold mb-8">Hight Light</h2>
+		<div className={`sidebar ${openSidebar ? "open" : ""} `}>
+			<h2 className="block text-center text-2xl font-bold mb-8">
+				Customization
+			</h2>
 
 			<div className="flex items-center mb-4">
 				<input
@@ -10,6 +17,7 @@ export const Sidebar = ({ handleChange, remainingDifferences }) => {
 					name="selection"
 					className="form-radio h-5 w-5 text-blue-600"
 					onChange={handleChange}
+					checked={settings.yearEnd}
 				/>
 				<label
 					htmlFor="yearEnd"
@@ -26,6 +34,7 @@ export const Sidebar = ({ handleChange, remainingDifferences }) => {
 					name="selection"
 					className="form-radio h-5 w-5 text-blue-600"
 					onChange={handleChange}
+					checked={settings.birthday}
 				/>
 				<label
 					htmlFor="birthday"
@@ -42,6 +51,7 @@ export const Sidebar = ({ handleChange, remainingDifferences }) => {
 					name="selection"
 					className="form-radio h-5 w-5 text-blue-600"
 					onChange={handleChange}
+					checked={settings.strippedMonth}
 				/>
 				<label
 					htmlFor="strippedMonth"
@@ -58,6 +68,7 @@ export const Sidebar = ({ handleChange, remainingDifferences }) => {
 					name="selection"
 					className="form-radio h-5 w-5 text-blue-600"
 					onChange={handleChange}
+					checked={settings.strippedYear}
 				/>
 				<label
 					htmlFor="strippedYear"
@@ -67,9 +78,28 @@ export const Sidebar = ({ handleChange, remainingDifferences }) => {
 				</label>
 			</div>
 
+			<div className="flex items-center mb-4">
+				<input
+					id="showPastWeeks"
+					type="checkbox"
+					name="showPastWeeks"
+					className="form-radio h-5 w-5 text-blue-600"
+					onChange={handleChange}
+					checked={settings.showPastWeeks}
+				/>
+				<label
+					htmlFor="showPastWeeks"
+					className="ml-2 text-gray-700 select-none cursor-pointer"
+				>
+					Show Past Weeks
+				</label>
+			</div>
+
+			<div className="border-t border-gray-300 my-8" />
+
 			<div>
 				{remainingDifferences && (
-					<div>
+					<div className="space-y-4">
 						<p>Số ngày còn lại: {remainingDifferences.days}</p>
 						<p>Số tuần còn lại: {remainingDifferences.weeks}</p>
 						<p>Số tháng còn lại: {remainingDifferences.months}</p>
