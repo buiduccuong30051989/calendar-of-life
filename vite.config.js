@@ -5,6 +5,7 @@ import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	base: "calendar-of-life",
 	plugins: [react(), svgr()],
 	resolve: {
     alias: {
