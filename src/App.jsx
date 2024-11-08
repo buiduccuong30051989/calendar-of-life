@@ -78,21 +78,21 @@ function App() {
 			/>
 			<div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
 				<button
-					className="text-3xl px-2 py-2 rounded-sm"
+					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
 					type="button"
 					onClick={() => setOpenSidebar(!openSidebar)}
 				>
 					<CogIcon className="w-4 h-4" />
 				</button>
 				<button
-					className="text-3xl px-2 py-2 rounded-sm"
+					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
 					type="button"
 					onClick={handlePrint}
 				>
 					<PrintIcon className="w-4 h-4" />
 				</button>
 				<button
-					className="text-3xl px-2 py-2 rounded-sm"
+					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
 					type="button"
 					onClick={handleReset}
 				>

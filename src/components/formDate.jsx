@@ -24,7 +24,7 @@ export const FormDate = ({ handleChange, dates }) => {
 							id="dateOfBirth"
 							value={dates.dateOfBirth}
 							onChange={handleChange}
-							className="border p-2 m-2"
+							className="border p-2 m-2 bg-white"
 						/>
 					</div>
 					<div>
@@ -36,7 +36,7 @@ export const FormDate = ({ handleChange, dates }) => {
 							id="dateOfDie"
 							value={dates.dateOfDie}
 							onChange={handleChange}
-							className="border p-2 m-2"
+							className="border p-2 m-2 bg-white"
 						/>
 					</div>
 				</div>
