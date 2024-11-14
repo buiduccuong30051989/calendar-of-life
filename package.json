@@ -19,6 +19,7 @@
 		"lucide-react": "^0.454.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
+		"sass": "^1.80.7",
 		"tailwind-merge": "^2.5.4",
 		"tailwindcss-animate": "^1.0.7",
 		"vite-plugin-svgr": "^4.3.0"
@@ -38,5 +39,8 @@
 		"tailwindcss": "^3.4.13",
 		"vite": "^5.3.4"
 	},
-	"homepage": "https://buiduccuong30051989.github.io/calendar-of-life"
+	"homepage": "https://buiduccuong30051989.github.io/calendar-of-life",
+	"volta": {
+		"node": "20.18.0"
+	}
 }
