@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button"
 import CogIcon from "./assets/icons/cog-svgrepo-com.svg?react";
 import PrintIcon from "./assets/icons/print-svgrepo-com.svg?react";
 import ResetIcon from "./assets/icons/reset-svgrepo-com.svg?react";
@@ -76,6 +77,7 @@ function App() {
 				settings={settings}
 				openSidebar={openSidebar}
 			/>
+
 			<div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
 				<button
 					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
