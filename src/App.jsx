@@ -1,9 +1,23 @@
+import { Printer, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button"
-import CogIcon from "./assets/icons/cog-svgrepo-com.svg?react";
-import PrintIcon from "./assets/icons/print-svgrepo-com.svg?react";
-import ResetIcon from "./assets/icons/reset-svgrepo-com.svg?react";
+import { AppSidebar } from "@/components/app-sidebar";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
+import { Separator } from "@/components/ui/separator";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@/components/ui/sidebar";
+
 import { DatesCalendar } from "./components/datesCalendar";
 import { FormDate } from "./components/formDate";
 import { Sidebar } from "./components/sidebar";
@@ -33,7 +47,6 @@ function App() {
 		...initSettingsView,
 		yearEnd: true,
 	});
-	const [openSidebar, setOpenSidebar] = useState(false);
 	const [showDateCalendar, setShowDateCalendar] = useState(false);
 
 	const dateDifferences = dateDifferencesFunc(dates);
@@ -70,52 +83,143 @@ function App() {
 		return <FormDate dates={dates} handleChange={handleChange} />;
 
 	return (
-		<div className="h-screen w-full flex items-center max-w-[90vw] mx-auto">
-			<Sidebar
-				handleChange={handleChangeSetting}
-				remainingDifferences={remainingDifferences}
-				settings={settings}
-				openSidebar={openSidebar}
-			/>
+		<SidebarProvider>
+			<AppSidebar
+				footer={
+					<div className="flex justify-center space-x-4">
+						<button
+							className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+							type="button"
+							onClick={handlePrint}
+						>
+							<Printer className="w-4 h-4" />
+						</button>
+						<button
+							className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+							type="button"
+							onClick={handleReset}
+						>
+							<RotateCcw className="w-4 h-4" />
+						</button>
+					</div>
+				}
+			>
+				<Sidebar
+					handleChange={handleChangeSetting}
+					remainingDifferences={remainingDifferences}
+					settings={settings}
+				/>
+			</AppSidebar>
+			<SidebarInset>
+				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 z-[1]">
+					<SidebarTrigger className="-ml-1" />
+					<Separator orientation="vertical" className="mr-2 h-4" />
+					<Breadcrumb>
+						<BreadcrumbList>
+							<BreadcrumbItem className="hidden md:block">
+								<BreadcrumbLink href="#">
+									Building Your Application
+								</BreadcrumbLink>
+							</BreadcrumbItem>
+							<BreadcrumbSeparator className="hidden md:block" />
+							<BreadcrumbItem>
+								<BreadcrumbPage>Data Fetching</BreadcrumbPage>
+							</BreadcrumbItem>
+						</BreadcrumbList>
+					</Breadcrumb>
+				</header>
+				<div className="flex flex-1">
+					<div className="h-screen w-full flex items-center max-w-[90vw] mx-auto absolute top-0 pt-16">
+						{/* <div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
+							<button
+								className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+								type="button"
+								onClick={() => setOpenSidebar(!openSidebar)}
+							>
+								<CogIcon className="w-4 h-4" />
+							</button>
+							<button
+								className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+								type="button"
+								onClick={handlePrint}
+							>
+								<PrintIcon className="w-4 h-4" />
+							</button>
+							<button
+								className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+								type="button"
+								onClick={handleReset}
+							>
+								<ResetIcon className="w-4 h-4" />
+							</button>
+						</div> */}
 
-			<div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
-				<button
-					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-					type="button"
-					onClick={() => setOpenSidebar(!openSidebar)}
-				>
-					<CogIcon className="w-4 h-4" />
-				</button>
-				<button
-					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-					type="button"
-					onClick={handlePrint}
-				>
-					<PrintIcon className="w-4 h-4" />
-				</button>
-				<button
-					className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-					type="button"
-					onClick={handleReset}
-				>
-					<ResetIcon className="w-4 h-4" />
-				</button>
-			</div>
+						{dateDifferences && (
+							<>
+								{showDateCalendar && (
+									<DatesCalendar
+										dates={dates}
+										dateDifferences={dateDifferences}
+									/>
+								)}
+								<WeeksCalendar
+									settings={settings}
+									dates={dates}
+									dateDifferences={dateDifferences}
+									showPastWeeks={settings.showPastWeeks}
+								/>
+							</>
+						)}
+					</div>
+				</div>
+			</SidebarInset>
+		</SidebarProvider>
+		// <div className="h-screen w-full flex items-center max-w-[90vw] mx-auto">
+		// 	<Sidebar
+		// 		handleChange={handleChangeSetting}
+		// 		remainingDifferences={remainingDifferences}
+		// 		settings={settings}
+		// 		openSidebar={openSidebar}
+		// 	/>
 
-			{dateDifferences && (
-				<>
-					{showDateCalendar && (
-						<DatesCalendar dates={dates} dateDifferences={dateDifferences} />
-					)}
-					<WeeksCalendar
-						settings={settings}
-						dates={dates}
-						dateDifferences={dateDifferences}
-						showPastWeeks={settings.showPastWeeks}
-					/>
-				</>
-			)}
-		</div>
+		// 	<div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
+		// 		<button
+		// 			className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+		// 			type="button"
+		// 			onClick={() => setOpenSidebar(!openSidebar)}
+		// 		>
+		// 			<CogIcon className="w-4 h-4" />
+		// 		</button>
+		// 		<button
+		// 			className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+		// 			type="button"
+		// 			onClick={handlePrint}
+		// 		>
+		// 			<PrintIcon className="w-4 h-4" />
+		// 		</button>
+		// 		<button
+		// 			className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
+		// 			type="button"
+		// 			onClick={handleReset}
+		// 		>
+		// 			<ResetIcon className="w-4 h-4" />
+		// 		</button>
+		// 	</div>
+
+		// 	{dateDifferences && (
+		// 		<>
+		// 			{showDateCalendar && (
+		// 				<DatesCalendar dates={dates} dateDifferences={dateDifferences} />
+		// 			)}
+		// 			<WeeksCalendar
+		// 				settings={settings}
+		// 				dates={dates}
+		// 				dateDifferences={dateDifferences}
+		// 				showPastWeeks={settings.showPastWeeks}
+		// 			/>
+		// 		</>
+		// 	)}
+		// </div>
 	);
 }
 

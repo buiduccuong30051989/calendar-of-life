@@ -2,14 +2,9 @@ export const Sidebar = ({
 	handleChange,
 	remainingDifferences,
 	settings,
-	openSidebar,
 }) => {
 	return (
-		<div className={`sidebar ${openSidebar ? "open" : ""} `}>
-			<h2 className="block text-center text-2xl font-bold mb-8">
-				Customization
-			</h2>
-
+		<div className="px-6">
 			<div className="flex items-center mb-4">
 				<input
 					id="yearEnd"
