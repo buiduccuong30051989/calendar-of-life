@@ -37,10 +37,10 @@ const initSettingsView = {
 
 function App() {
 	const [dates, setDates] = useState({
-		dateOfBirth: "1989-05-30",
-		dateOfDie: "2062-05-30",
-		// dateOfBirth: "",
-		// dateOfDie: "",
+		// dateOfBirth: "1989-05-30",
+		// dateOfDie: "2062-05-30",
+		dateOfBirth: "",
+		dateOfDie: "",
 	});
 	const [settings, setSettings] = useState({
 		...initSettingsHighLight,
@@ -130,30 +130,6 @@ function App() {
 				</header>
 				<div className="flex flex-1">
 					<div className="h-screen w-full flex items-center max-w-[90vw] mx-auto absolute top-0 pt-16">
-						{/* <div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
-							<button
-								className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-								type="button"
-								onClick={() => setOpenSidebar(!openSidebar)}
-							>
-								<CogIcon className="w-4 h-4" />
-							</button>
-							<button
-								className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-								type="button"
-								onClick={handlePrint}
-							>
-								<PrintIcon className="w-4 h-4" />
-							</button>
-							<button
-								className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-								type="button"
-								onClick={handleReset}
-							>
-								<ResetIcon className="w-4 h-4" />
-							</button>
-						</div> */}
-
 						{dateDifferences && (
 							<>
 								{showDateCalendar && (
@@ -174,52 +150,6 @@ function App() {
 				</div>
 			</SidebarInset>
 		</SidebarProvider>
-		// <div className="h-screen w-full flex items-center max-w-[90vw] mx-auto">
-		// 	<Sidebar
-		// 		handleChange={handleChangeSetting}
-		// 		remainingDifferences={remainingDifferences}
-		// 		settings={settings}
-		// 		openSidebar={openSidebar}
-		// 	/>
-
-		// 	<div className="toolbar fixed top-0 left-0 flex flex-col space-y-2">
-		// 		<button
-		// 			className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-		// 			type="button"
-		// 			onClick={() => setOpenSidebar(!openSidebar)}
-		// 		>
-		// 			<CogIcon className="w-4 h-4" />
-		// 		</button>
-		// 		<button
-		// 			className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-		// 			type="button"
-		// 			onClick={handlePrint}
-		// 		>
-		// 			<PrintIcon className="w-4 h-4" />
-		// 		</button>
-		// 		<button
-		// 			className="text-3xl px-2 py-2 rounded-sm bg-gray-50"
-		// 			type="button"
-		// 			onClick={handleReset}
-		// 		>
-		// 			<ResetIcon className="w-4 h-4" />
-		// 		</button>
-		// 	</div>
-
-		// 	{dateDifferences && (
-		// 		<>
-		// 			{showDateCalendar && (
-		// 				<DatesCalendar dates={dates} dateDifferences={dateDifferences} />
-		// 			)}
-		// 			<WeeksCalendar
-		// 				settings={settings}
-		// 				dates={dates}
-		// 				dateDifferences={dateDifferences}
-		// 				showPastWeeks={settings.showPastWeeks}
-		// 			/>
-		// 		</>
-		// 	)}
-		// </div>
 	);
 }
 
