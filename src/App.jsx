@@ -51,9 +51,9 @@ function App() {
 
 	const dateDifferences = dateDifferencesFunc(dates);
 	const remainingDifferences = remainingDifferencesFunc(dates);
+	console.log("dateDifferences", dateDifferences);
 
-	const handleChange = (e) => {
-		const { id, value } = e.target;
+	const handleChange = ({ id, value }) => {
 		setDates((prevDates) => ({
 			...prevDates,
 			[id]: value,

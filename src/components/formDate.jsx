@@ -1,5 +1,16 @@
 import BlurIn from "@/components/ui/blur-in";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import RetroGrid from "@/components/ui/retro-grid";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import AnimatedGridPattern from "./ui/animated-grid-pattern";
 
@@ -73,28 +84,70 @@ export const FormDate = ({ handleChange, dates }) => {
 				<BlurIn word={heading} />
 				<div className="grid grid-cols-2 gap-4 mt-16 max-w-[480px] mx-auto">
 					<div>
-						<label className="block" htmlFor="dateOfBirth">
-							Date of birth
-						</label>
-						<input
-							type="date"
-							id="dateOfBirth"
-							value={dates.dateOfBirth}
-							onChange={handleChange}
-							className="border p-2 m-2 bg-white"
-						/>
+						<Popover>
+							<PopoverTrigger asChild>
+								<Button
+									variant={"outline"}
+									className={cn(
+										"w-[240px] justify-start text-left font-normal",
+										!dates.dateOfBirth && "text-muted-foreground",
+									)}
+								>
+									<CalendarIcon />
+									{dates.dateOfBirth ? (
+										format(dates.dateOfBirth, "PPP")
+									) : (
+										<span>Date of birth</span>
+									)}
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent className="w-auto p-0" align="start">
+								<Calendar
+									mode="single"
+									selected={dates.dateOfBirth}
+									onSelect={(date) =>
+										handleChange({ id: "dateOfBirth", value: date })
+									}
+									initialFocus
+									captionLayout="dropdown-buttons"
+									fromYear={1960}
+									toYear={2030}
+								/>
+							</PopoverContent>
+						</Popover>
 					</div>
 					<div>
-						<label className="block" htmlFor="dateOfDie">
-							Date of die
-						</label>
-						<input
-							type="date"
-							id="dateOfDie"
-							value={dates.dateOfDie}
-							onChange={handleChange}
-							className="border p-2 m-2 bg-white"
-						/>
+						<Popover>
+							<PopoverTrigger asChild>
+								<Button
+									variant={"outline"}
+									className={cn(
+										"w-[240px] justify-start text-left font-normal",
+										!dates.dateOfDie && "text-muted-foreground",
+									)}
+								>
+									<CalendarIcon />
+									{dates.dateOfDie ? (
+										format(dates.dateOfDie, "PPP")
+									) : (
+										<span>Date of Dead</span>
+									)}
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent className="w-auto p-0" align="start">
+								<Calendar
+									mode="single"
+									selected={dates.dateOfDie}
+									onSelect={(date) =>
+										handleChange({ id: "dateOfDie", value: date })
+									}
+									initialFocus
+									captionLayout="dropdown-buttons"
+									fromYear={1960}
+									toYear={2030}
+								/>
+							</PopoverContent>
+						</Popover>
 					</div>
 				</div>
 			</div>

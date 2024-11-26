@@ -1,3 +1,17 @@
+import {
+  addDays,
+  addWeeks,
+  eachDayOfInterval,
+  endOfWeek,
+  format,
+  getMonth,
+  getYear,
+  isAfter,
+  isBefore,
+  isSameDay,
+  startOfWeek,
+} from 'date-fns';
+
 import { WeekItem } from "./weekItem";
 
 export const WeeksCalendar = ({
@@ -6,67 +20,65 @@ export const WeeksCalendar = ({
 	settings,
 	showPastWeeks,
 }) => {
-	const weeks = Array.from({ length: dateDifferences.weeks }).map(
-		(_, index) => {
-			const startDate = new Date(dates.dateOfBirth);
-			startDate.setDate(startDate.getDate() + index * 7);
-			const endDate = new Date(startDate);
-			endDate.setDate(endDate.getDate() + 6);
-			const formattedStartDate = startDate.toLocaleDateString();
-			const formattedEndDate = endDate.toLocaleDateString();
-			const isPast = endDate < new Date();
-
-			// Kiểm tra xem tuần hiện tại có chứa ngày sinh nhật hay không
-			const birthday = new Date(dates.dateOfBirth);
-			birthday.setFullYear(startDate.getFullYear());
-			const isBirthdayWeek = startDate <= birthday && birthday <= endDate;
-
-			// Kiểm tra xem tuần hiện tại có chứa ngày đầu năm mới hay không
-			let isNewYearWeek = false;
-			for (
-				let d = new Date(startDate);
-				d <= endDate;
-				d.setDate(d.getDate() + 1)
-			) {
-				if (d.getMonth() === 0 && d.getDate() === 1) {
-					isNewYearWeek = true;
-					break;
-				}
-			}
-
-			// Tạo class cho tháng hiện tại của từng tuần
-			const startMonthClass = `month-${startDate.getMonth() + 1} ${(startDate.getMonth() + 1) % 2 === 0 ? `${settings.strippedMonth ? "month-even bg-gray-300" : "month-even"}` : "month-odd"}`;
-			const endMonthClass = `month-${endDate.getMonth() + 1}`;
-			const monthClasses =
-				startDate.getMonth() === endDate.getMonth()
-					? startMonthClass
-					: `${startMonthClass} ${endMonthClass}`;
-
-			// Tạo class cho năm hiện tại của từng tuần
-			const startYearClass = `year-${startDate.getFullYear()} ${startDate.getFullYear() % 2 === 0 ? `${settings.strippedYear ? "year-even bg-gray-400" : "year-even"}` : "year-odd"}`;
-			const endYearClass = `year-${endDate.getFullYear()}`;
-			const yearClasses =
-				startDate.getFullYear() === endDate.getFullYear()
-					? startYearClass
-					: `${startYearClass} ${endYearClass}`;
-
-			return {
-				index,
-				title: `${formattedStartDate} - ${formattedEndDate}`,
-				settings,
-				isPast,
-				isBirthdayWeek,
-				isNewYearWeek,
-				monthClasses,
-				yearClasses,
-				formattedStartDate,
-				formattedEndDate,
-			};
-		},
-	);
+	const weeks = Array.from({ length: dateDifferences.weeks }).map((_, index) => {
+		const startDate = addWeeks(new Date(dates.dateOfBirth), index);
+		const endDate = endOfWeek(startDate, { weekStartsOn: 0 }); // Assuming week starts on Sunday
+	
+		const formattedStartDate = format(startDate, 'MM/dd/yyyy');
+		const formattedEndDate = format(endDate, 'MM/dd/yyyy');
+		const isPast = isBefore(endDate, new Date());
+	
+		// Check if the current week contains the birthday
+		const birthday = new Date(dates.dateOfBirth);
+		birthday.setFullYear(getYear(startDate));
+		const isBirthdayWeek = !isBefore(birthday, startDate) && !isAfter(birthday, endDate);
+	
+		// Check if the current week contains New Year's Day
+		const isNewYearWeek = eachDayOfInterval({ start: startDate, end: endDate }).some(
+			(day) => getMonth(day) === 0 && day.getDate() === 1
+		);
+	
+		// Create class for the current month of each week
+		const startMonthClass = `month-${getMonth(startDate) + 1} ${
+			(getMonth(startDate) + 1) % 2 === 0
+				? `${settings.strippedMonth ? 'month-even bg-gray-300' : 'month-even'}`
+				: 'month-odd'
+		}`;
+		const endMonthClass = `month-${getMonth(endDate) + 1}`;
+		const monthClasses =
+			getMonth(startDate) === getMonth(endDate)
+				? startMonthClass
+				: `${startMonthClass} ${endMonthClass}`;
+	
+		// Create class for the current year of each week
+		const startYearClass = `year-${getYear(startDate)} ${
+			getYear(startDate) % 2 === 0
+				? `${settings.strippedYear ? 'year-even bg-gray-400' : 'year-even'}`
+				: 'year-odd'
+		}`;
+		const endYearClass = `year-${getYear(endDate)}`;
+		const yearClasses =
+			getYear(startDate) === getYear(endDate)
+				? startYearClass
+				: `${startYearClass} ${endYearClass}`;
+	
+		return {
+			index,
+			title: `${formattedStartDate} - ${formattedEndDate}`,
+			settings,
+			isPast,
+			isBirthdayWeek,
+			isNewYearWeek,
+			monthClasses,
+			yearClasses,
+			formattedStartDate,
+			formattedEndDate,
+		};
+	});
+	console.log({weeks})
 
   const filteredWeeks = showPastWeeks ? weeks : weeks.filter(week => !week.isPast);
-  console.log(showPastWeeks, filteredWeeks)
+  console.log({filteredWeeks})
 
 	const rows = [];
 

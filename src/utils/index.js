@@ -1,67 +1,75 @@
-// Hàm để tính toán giữa hai ngày
+import {
+  addYears,
+  differenceInDays,
+  differenceInMonths,
+  differenceInWeeks,
+  differenceInYears,
+  isAfter,
+  isBefore,
+  isSameDay,
+} from 'date-fns';
+
 export const calculateDateDifferences = (startDate, endDate) => {
-	const start = new Date(startDate);
-	const end = new Date(endDate);
-	const diffTime = Math.abs(end - start);
-	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-	const diffWeeks = Math.ceil(diffDays / 7);
+	console.log(startDate, endDate);
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+	
 
-	// Tính số năm chính xác
-	const diffYears = end.getFullYear() - start.getFullYear();
-	const isBirthdayPassedThisYear =
-		end.getMonth() > start.getMonth() ||
-		(end.getMonth() === start.getMonth() && end.getDate() >= start.getDate());
-	const exactYears = isBirthdayPassedThisYear ? diffYears : diffYears - 1;
+  const diffDays = differenceInDays(end, start);
+  const diffWeeks = differenceInWeeks(end, start);
+	console.log({diffDays, diffWeeks})
 
-	// Tính số tháng chính xác
-	const diffMonths = diffYears * 12 + (end.getMonth() - start.getMonth());
-	const exactMonths = isBirthdayPassedThisYear ? diffMonths : diffMonths - 1;
+  // Calculate exact years
+  const diffYears = differenceInYears(end, start);
+  const isBirthdayPassedThisYear = isAfter(end, addYears(start, diffYears)) || isSameDay(end, addYears(start, diffYears));
+  const exactYears = isBirthdayPassedThisYear ? diffYears : diffYears - 1;
 
-	// Số lần sinh nhật và số lần tết holiday
-	const birthdays = exactYears;
-	const holidays = exactYears; // Assuming one holiday per year
+  // Calculate exact months
+  const diffMonths = differenceInMonths(end, start);
+  const exactMonths = isBirthdayPassedThisYear ? diffMonths : diffMonths - 1;
 
-	return {
-		days: diffDays,
-		weeks: diffWeeks,
-		months: exactMonths,
-		years: exactYears,
-		birthdays: birthdays,
-		holidays: holidays,
-	};
+  // Number of birthdays and holidays
+  const birthdays = exactYears;
+  const holidays = exactYears; // Assuming one holiday per year
+
+  return {
+    days: diffDays,
+    weeks: diffWeeks,
+    months: exactMonths,
+    years: exactYears,
+    birthdays: birthdays,
+    holidays: holidays,
+  };
 };
 
-// Hàm để tính toán số ngày, tuần, tháng, năm còn lại từ hôm nay đến ngày chết
 export const calculateRemainingDifferences = (endDate) => {
-	const start = new Date();
-	const end = new Date(endDate);
-	const diffTime = Math.abs(end - start);
-	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-	const diffWeeks = Math.ceil(diffDays / 7);
+  const start = new Date();
+  const end = new Date(endDate);
 
-	// Tính số năm chính xác
-	const diffYears = end.getFullYear() - start.getFullYear();
-	const isBirthdayPassedThisYear =
-		end.getMonth() > start.getMonth() ||
-		(end.getMonth() === start.getMonth() && end.getDate() >= start.getDate());
-	const exactYears = isBirthdayPassedThisYear ? diffYears : diffYears - 1;
+  const diffDays = differenceInDays(end, start);
+  const diffWeeks = differenceInWeeks(end, start);
 
-	// Tính số tháng chính xác
-	const diffMonths = diffYears * 12 + (end.getMonth() - start.getMonth());
-	const exactMonths = isBirthdayPassedThisYear ? diffMonths : diffMonths - 1;
+  // Calculate exact years
+  const diffYears = differenceInYears(end, start);
+  const isBirthdayPassedThisYear = isAfter(end, addYears(start, diffYears)) || isSameDay(end, addYears(start, diffYears));
+  const exactYears = isBirthdayPassedThisYear ? diffYears : diffYears - 1;
 
-	// Số lần sinh nhật và số lần tết holiday
-	const birthdays = exactYears;
-	const holidays = exactYears; // Assuming one holiday per year
+  // Calculate exact months
+  const diffMonths = differenceInMonths(end, start);
+  const exactMonths = isBirthdayPassedThisYear ? diffMonths : diffMonths - 1;
 
-	return {
-		days: diffDays,
-		weeks: diffWeeks,
-		months: exactMonths,
-		years: exactYears,
-		birthdays: birthdays,
-		holidays: holidays,
-	};
+  // Number of birthdays and holidays
+  const birthdays = exactYears;
+  const holidays = exactYears; // Assuming one holiday per year
+
+  return {
+    days: diffDays,
+    weeks: diffWeeks,
+    months: exactMonths,
+    years: exactYears,
+    birthdays: birthdays,
+    holidays: holidays,
+  };
 };
 
 // Tính toán giữa dateOfBirth và dateOfDie
