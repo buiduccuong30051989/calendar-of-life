@@ -1,93 +1,45 @@
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 export const Sidebar = ({
 	handleChange,
 	remainingDifferences,
 	settings,
+	setShowPastWeeks,
+	showPastWeeks,
 }) => {
 	return (
 		<div className="px-6">
-			<div className="flex items-center mb-4">
-				<input
-					id="yearEnd"
-					type="radio"
-					name="selection"
-					className="form-radio h-5 w-5 text-blue-600"
-					onChange={handleChange}
-					checked={settings.yearEnd}
-				/>
-				<label
-					htmlFor="yearEnd"
-					className="ml-2 text-gray-700 select-none cursor-pointer"
-				>
-					Year End
-				</label>
-			</div>
+			<RadioGroup defaultValue={settings} onValueChange={handleChange}>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="yearEnd" id="yearEnd" />
+					<Label htmlFor="yearEnd">Year End</Label>
+				</div>
 
-			<div className="flex items-center mb-4">
-				<input
-					id="birthday"
-					type="radio"
-					name="selection"
-					className="form-radio h-5 w-5 text-blue-600"
-					onChange={handleChange}
-					checked={settings.birthday}
-				/>
-				<label
-					htmlFor="birthday"
-					className="ml-2 text-gray-700 select-none cursor-pointer"
-				>
-					BirthDay
-				</label>
-			</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="birthday" id="birthday" />
+					<Label htmlFor="birthday">BirthDay</Label>
+				</div>
 
-			<div className="flex items-center mb-4">
-				<input
-					id="strippedMonth"
-					type="radio"
-					name="selection"
-					className="form-radio h-5 w-5 text-blue-600"
-					onChange={handleChange}
-					checked={settings.strippedMonth}
-				/>
-				<label
-					htmlFor="strippedMonth"
-					className="ml-2 text-gray-700 select-none cursor-pointer"
-				>
-					Stripped Month
-				</label>
-			</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="strippedMonth" id="strippedMonth" />
+					<Label htmlFor="strippedMonth">Stripped Month</Label>
+				</div>
 
-			<div className="flex items-center mb-4">
-				<input
-					id="strippedYear"
-					type="radio"
-					name="selection"
-					className="form-radio h-5 w-5 text-blue-600"
-					onChange={handleChange}
-					checked={settings.strippedYear}
-				/>
-				<label
-					htmlFor="strippedYear"
-					className="ml-2 text-gray-700 select-none cursor-pointer"
-				>
-					Stripped Year
-				</label>
-			</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="strippedYear" id="strippedYear" />
+					<Label htmlFor="strippedYear">Stripped Year</Label>
+				</div>
+			</RadioGroup>
 
-			<div className="flex items-center mb-4">
-				<input
+			<div className="flex items-center my-4 space-x-2">
+				<Checkbox
 					id="showPastWeeks"
-					type="checkbox"
-					name="showPastWeeks"
-					className="form-radio h-5 w-5 text-blue-600"
-					onChange={handleChange}
-					checked={settings.showPastWeeks}
+					checked={showPastWeeks}
+					onCheckedChange={setShowPastWeeks}
 				/>
-				<label
-					htmlFor="showPastWeeks"
-					className="ml-2 text-gray-700 select-none cursor-pointer"
-				>
-					Show Past Weeks
-				</label>
+				<Label htmlFor="showPastWeeks">Show Past Weeks</Label>
 			</div>
 
 			<div className="border-t border-gray-300 my-8" />

@@ -26,11 +26,11 @@ export const WeekItem = memo(
 			>
 				<div
 					title={title}
-					className={`${settings.strippedMonth ? "stripped-month" : ""} ${settings.strippedYear ? "stripped-year" : ""} w-4 h-4 border border-gray-300 flex items-center justify-center ${
+					className={`${settings === "strippedMonth" ? "stripped-month" : ""} ${settings === "strippedYear" ? "stripped-year" : ""} w-4 h-4 border border-gray-300 flex items-center justify-center ${
 						isBirthdayWeek
-							? `${settings.birthday ? "bg-red-300" : ""}`
+							? `${settings === "birthday" ? "bg-red-300" : ""}`
 							: isNewYearWeek
-								? `${settings.yearEnd ? "bg-red-500" : ""}`
+								? `${settings === "yearEnd" ? "bg-red-500" : ""}`
 								: ""
 					} ${monthClasses} ${yearClasses} ${isPast ? "isPast filter grayscale" : ""}`}
 				/>

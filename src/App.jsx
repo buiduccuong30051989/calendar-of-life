@@ -24,34 +24,19 @@ import { Sidebar } from "./components/sidebar";
 import { WeeksCalendar } from "./components/weeksCalendar";
 import { dateDifferencesFunc, remainingDifferencesFunc } from "./utils";
 
-const initSettingsHighLight = {
-	yearEnd: false,
-	birthday: false,
-	strippedMonth: false,
-	strippedYear: false,
-};
-
-const initSettingsView = {
-	showPastWeeks: false,
-};
-
 function App() {
 	const [dates, setDates] = useState({
-		// dateOfBirth: "1989-05-30",
-		// dateOfDie: "2062-05-30",
-		dateOfBirth: "",
-		dateOfDie: "",
+		dateOfBirth: "1989-05-30",
+		dateOfDie: "2062-05-30",
+		// dateOfBirth: "",
+		// dateOfDie: "",
 	});
-	const [settings, setSettings] = useState({
-		...initSettingsHighLight,
-		...initSettingsView,
-		yearEnd: true,
-	});
+	const [settings, setSettings] = useState('yearEnd');
+	const [showPastWeeks, setShowPastWeeks] = useState(false);
 	const [showDateCalendar, setShowDateCalendar] = useState(false);
 
 	const dateDifferences = dateDifferencesFunc(dates);
 	const remainingDifferences = remainingDifferencesFunc(dates);
-	console.log("dateDifferences", dateDifferences);
 
 	const handleChange = ({ id, value }) => {
 		setDates((prevDates) => ({
@@ -60,17 +45,8 @@ function App() {
 		}));
 	};
 
-	const handleChangeSetting = (e) => {
-		const { id, value, checked, type } = e.target;
-
-		if (type === "radio") {
-			setSettings({ ...initSettingsHighLight, [id]: checked });
-		} else {
-			setSettings((prev) => ({
-				...prev,
-				[id]: type === "checkbox" ? checked : value,
-			}));
-		}
+	const handleChangeSetting = (val) => {
+		setSettings(val);
 	};
 
 	const handlePrint = () => {
@@ -106,6 +82,8 @@ function App() {
 			>
 				<Sidebar
 					handleChange={handleChangeSetting}
+					setShowPastWeeks={setShowPastWeeks}
+					showPastWeeks={showPastWeeks}
 					remainingDifferences={remainingDifferences}
 					settings={settings}
 				/>
@@ -142,7 +120,7 @@ function App() {
 									settings={settings}
 									dates={dates}
 									dateDifferences={dateDifferences}
-									showPastWeeks={settings.showPastWeeks}
+									showPastWeeks={showPastWeeks}
 								/>
 							</>
 						)}
