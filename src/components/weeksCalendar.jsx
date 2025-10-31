@@ -1,96 +1,37 @@
-import {
-	addDays,
-	addWeeks,
-	eachDayOfInterval,
-	endOfWeek,
-	format,
-	getMonth,
-	getYear,
-	isAfter,
-	isBefore,
-	isSameDay,
-	startOfWeek,
-} from "date-fns";
+import { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { WeekItem } from './weekItem';
+import { generateWeeksData, filterWeeks, splitWeeksIntoRows } from '@/utils';
+import { datesShape, dateDifferencesShape } from './propTypes';
 
-import { WeekItem } from "./weekItem";
-
+/**
+ * WeeksCalendar component displays a grid of weeks
+ * @param {Object} props
+ * @param {Object} props.dates - Date of birth and death
+ * @param {Object} props.dateDifferences - Calculated date differences
+ * @param {string} props.settings - Current view setting
+ * @param {boolean} props.showPastWeeks - Whether to show past weeks
+ */
 export const WeeksCalendar = ({
 	dates,
 	dateDifferences,
 	settings,
 	showPastWeeks,
 }) => {
-	const weeks = Array.from({ length: dateDifferences.weeks }).map(
-		(_, index) => {
-			const startDate = addWeeks(new Date(dates.dateOfBirth), index);
-			const endDate = endOfWeek(startDate, { weekStartsOn: 0 }); // Assuming week starts on Sunday
+	const rows = useMemo(() => {
+		if (!dateDifferences?.weeks || !dates?.dateOfBirth) return [];
 
-			const formattedStartDate = format(startDate, "MM/dd/yyyy");
-			const formattedEndDate = format(endDate, "MM/dd/yyyy");
-			const isPast = isBefore(endDate, new Date());
+		// Generate all weeks data
+		const weeks = generateWeeksData(dates.dateOfBirth, dateDifferences.weeks, settings);
 
-			// Check if the current week contains the birthday
-			const birthday = new Date(dates.dateOfBirth);
-			birthday.setFullYear(getYear(startDate));
-			const isBirthdayWeek =
-				!isBefore(birthday, startDate) && !isAfter(birthday, endDate);
+		// Filter weeks based on showPastWeeks setting
+		const filteredWeeks = filterWeeks(weeks, showPastWeeks);
 
-			// Check if the current week contains New Year's Day
-			const isNewYearWeek = eachDayOfInterval({
-				start: startDate,
-				end: endDate,
-			}).some((day) => getMonth(day) === 0 && day.getDate() === 1);
+		// Split into rows for table display
+		return splitWeeksIntoRows(filteredWeeks);
+	}, [dates.dateOfBirth, dateDifferences?.weeks, settings, showPastWeeks]);
 
-			// Create class for the current month of each week
-			const startMonthClass = `month-${getMonth(startDate) + 1} ${
-				(getMonth(startDate) + 1) % 2 === 0
-					? `${settings === "strippedMonth" ? "month-even bg-gray-300" : "month-even"}`
-					: "month-odd"
-			}`;
-			const endMonthClass = `month-${getMonth(endDate) + 1}`;
-			const monthClasses =
-				getMonth(startDate) === getMonth(endDate)
-					? startMonthClass
-					: `${startMonthClass} ${endMonthClass}`;
-
-			// Create class for the current year of each week
-			const startYearClass = `year-${getYear(startDate)} ${
-				getYear(startDate) % 2 === 0
-					? `${settings === "strippedYear" ? "year-even bg-gray-400" : "year-even"}`
-					: "year-odd"
-			}`;
-			const endYearClass = `year-${getYear(endDate)}`;
-			const yearClasses =
-				getYear(startDate) === getYear(endDate)
-					? startYearClass
-					: `${startYearClass} ${endYearClass}`;
-
-			return {
-				index,
-				title: `${formattedStartDate} - ${formattedEndDate}`,
-				settings,
-				isPast,
-				isBirthdayWeek,
-				isNewYearWeek,
-				monthClasses,
-				yearClasses,
-				formattedStartDate,
-				formattedEndDate,
-			};
-		},
-	);
-	console.log({ weeks });
-
-	const filteredWeeks = showPastWeeks
-		? weeks
-		: weeks.filter((week) => !week.isPast);
-	console.log({ filteredWeeks });
-
-	const rows = [];
-
-	for (let i = 0; i < filteredWeeks.length; i += 56) {
-		rows.push(filteredWeeks.slice(i, i + 56));
-	}
+	if (rows.length === 0) return null;
 
 	return (
 		<table className="table-auto mt-4 mx-auto w-fit">
@@ -107,4 +48,11 @@ export const WeeksCalendar = ({
 			</tbody>
 		</table>
 	);
+};
+
+WeeksCalendar.propTypes = {
+	dates: datesShape.isRequired,
+	dateDifferences: dateDifferencesShape,
+	settings: PropTypes.string.isRequired,
+	showPastWeeks: PropTypes.bool.isRequired,
 };

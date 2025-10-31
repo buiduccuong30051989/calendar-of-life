@@ -1,35 +1,23 @@
-import BlurIn from "@/components/ui/blur-in";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { useEffect, useState, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import BlurIn from '@/components/ui/blur-in';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@/components/ui/popover";
-import RetroGrid from "@/components/ui/retro-grid";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+} from '@/components/ui/popover';
+import RetroGrid from '@/components/ui/retro-grid';
+import AnimatedGridPattern from './ui/animated-grid-pattern';
+import { cn } from '@/lib/utils';
+import { getRandomItem } from '@/utils/helpers';
+import { APP_CONFIG, HEADING_QUOTES, DATE_FIELDS, TEXTS } from '@/constants';
 
-import { useEffect, useState } from "react";
-import AnimatedGridPattern from "./ui/animated-grid-pattern";
-
-const getRandom = (randomData) => {
-	if (Array.isArray(randomData)) {
-		const randomIndex = Math.floor(Math.random() * randomData.length);
-		return randomData[randomIndex];
-	}
-
-	if (typeof randomData === "object" && randomData !== null) {
-		const keys = Object.keys(randomData);
-		const randomIndex = Math.floor(Math.random() * keys.length);
-		return randomData[keys[randomIndex]];
-	}
-
-	throw new Error("Invalid data type. Expected an array or an object.");
-};
-
-const BACKGROUND = {
+// Background components configuration
+const BACKGROUNDS = {
 	1: <RetroGrid angle={18} />,
 	2: (
 		<AnimatedGridPattern
@@ -41,39 +29,45 @@ const BACKGROUND = {
 	),
 };
 
-const HEADING_DATA = {
+// Heading components for display
+const HEADING_COMPONENTS = {
 	1: (
 		<p className="text-5xl font-bold max-w-[992px]">
-			By acknowledging the inevitability of death,
+			{HEADING_QUOTES.QUOTE_1.text.split(', ')[0]},
 			<br />
-			become obsessed with life.
+			{HEADING_QUOTES.QUOTE_1.text.split(', ')[1]}
 		</p>
 	),
 	2: (
 		<p className="text-5xl font-bold max-w-[992px]">
-			We have two lives,
+			{HEADING_QUOTES.QUOTE_2.text.split(', ')[0]},
 			<br />
-			and the second begins when we realize we only have one.
+			{HEADING_QUOTES.QUOTE_2.text.split(', ')[1]}
 		</p>
 	),
 	3: (
 		<p className="text-5xl font-bold max-w-[992px]">
-			This is your life,
+			{HEADING_QUOTES.QUOTE_3.text.split(', ')[0]},
 			<br />
-			and its ending one minute at a time.
+			{HEADING_QUOTES.QUOTE_3.text.split(', ')[1]}
 		</p>
 	),
 };
 
-const randomBackground = getRandom(BACKGROUND);
-
+/**
+ * FormDate component for selecting birth and death dates
+ * @param {Object} props
+ * @param {Function} props.handleChange - Handler for date changes
+ * @param {Object} props.dates - Current date values
+ */
 export const FormDate = ({ handleChange, dates }) => {
-	const [heading, setHeading] = useState(() => getRandom(HEADING_DATA));
+	const [heading, setHeading] = useState(() => getRandomItem(HEADING_COMPONENTS));
+	const randomBackground = useMemo(() => getRandomItem(BACKGROUNDS), []);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setHeading(getRandom(HEADING_DATA));
-		}, 60000);
+			setHeading(getRandomItem(HEADING_COMPONENTS));
+		}, APP_CONFIG.HEADING_ROTATION_INTERVAL);
 
 		return () => clearInterval(interval);
 	}, []);
@@ -97,7 +91,7 @@ export const FormDate = ({ handleChange, dates }) => {
 									{dates.dateOfBirth ? (
 										format(dates.dateOfBirth, "PPP")
 									) : (
-										<span>Date of birth</span>
+										<span>{TEXTS.EN.DATE_OF_BIRTH}</span>
 									)}
 								</Button>
 							</PopoverTrigger>
@@ -106,12 +100,12 @@ export const FormDate = ({ handleChange, dates }) => {
 									mode="single"
 									selected={dates.dateOfBirth}
 									onSelect={(date) =>
-										handleChange({ id: "dateOfBirth", value: date })
+										handleChange({ id: DATE_FIELDS.DATE_OF_BIRTH, value: date })
 									}
 									initialFocus
 									captionLayout="dropdown-buttons"
-									fromYear={1960}
-									toYear={2030}
+									fromYear={APP_CONFIG.DEFAULT_FROM_YEAR}
+									toYear={APP_CONFIG.DEFAULT_TO_YEAR}
 								/>
 							</PopoverContent>
 						</Popover>
@@ -130,7 +124,7 @@ export const FormDate = ({ handleChange, dates }) => {
 									{dates.dateOfDie ? (
 										format(dates.dateOfDie, "PPP")
 									) : (
-										<span>Date of Dead</span>
+										<span>{TEXTS.EN.DATE_OF_DEATH}</span>
 									)}
 								</Button>
 							</PopoverTrigger>
@@ -139,12 +133,12 @@ export const FormDate = ({ handleChange, dates }) => {
 									mode="single"
 									selected={dates.dateOfDie}
 									onSelect={(date) =>
-										handleChange({ id: "dateOfDie", value: date })
+										handleChange({ id: DATE_FIELDS.DATE_OF_DIE, value: date })
 									}
 									initialFocus
 									captionLayout="dropdown-buttons"
-									fromYear={1960}
-									toYear={2030}
+									fromYear={APP_CONFIG.DEFAULT_FROM_YEAR}
+									toYear={APP_CONFIG.DEFAULT_TO_YEAR}
 								/>
 							</PopoverContent>
 						</Popover>
@@ -152,9 +146,17 @@ export const FormDate = ({ handleChange, dates }) => {
 				</div>
 			</div>
 			<footer className="fixed bottom-0 left-0 w-full p-4">
-				<h3>~ Memento mori ~</h3>
+				<h3>{TEXTS.EN.MEMENTO_MORI}</h3>
 			</footer>
 			{randomBackground}
 		</div>
 	);
+};
+
+FormDate.propTypes = {
+	handleChange: PropTypes.func.isRequired,
+	dates: PropTypes.shape({
+		dateOfBirth: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+		dateOfDie: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+	}).isRequired,
 };
